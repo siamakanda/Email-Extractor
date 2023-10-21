@@ -1,6 +1,6 @@
 # Email Collector Chrome Extension
 
-![Extension Logo](extension-logo.png)
+![Extension Logo](images/icon128.png)
 
 The Email Collector Chrome Extension is a simple tool that allows you to collect email addresses from web pages. It's designed to assist in quickly gathering email addresses from websites for various purposes, such as marketing, outreach, or research.
 
