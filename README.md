@@ -46,6 +46,4 @@ Please use this extension responsibly and in compliance with applicable laws and
 
 **Disclaimer**: This extension is provided as-is and is not guaranteed to work perfectly on all websites due to variations in website structures and email obfuscation techniques.
 
-*Note: Replace `extension-logo.png` with the actual logo of your extension, and provide more detailed information in the respective sections as needed.*
-
-Enjoy using the Email Collector Chrome Extension! 😊
+Enjoy using the Email Extractor Chrome Extension! 😊
