@@ -1,14 +1,14 @@
-# Email Collector Chrome Extension
+# Email Extractor
 
-![Extension Logo](images/icon128.png)
+!Email Extractor](images/icon128.png)
 
-The Email Collector Chrome Extension is a simple tool that allows you to collect email addresses from web pages. It's designed to assist in quickly gathering email addresses from websites for various purposes, such as marketing, outreach, or research.
+The Email Extractor is a simple tool that allows you to collect email addresses from web pages. It's designed to assist in quickly gathering email addresses from websites for various purposes, such as marketing, outreach, or research.
 
 ## Features
 
 - Collects email addresses from the current webpage.
-- [Optional] Saves collected email addresses to a local storage.
-- [Optional] Sends collected email addresses to a server for further processing.
+- Saves collected email addresses to a local storage.
+- Sends collected email addresses to a server for further processing. (Coming Soon)
 
 ## Installation
 
@@ -24,21 +24,9 @@ The Email Collector Chrome Extension is a simple tool that allows you to collect
 2. Visit a webpage from which you want to collect email addresses.
 3. The extension will scan the page for email addresses and display them.
 
-## Configuration
-
-You can customize the extension's behavior by modifying the `manifest.json` file and the provided scripts.
-
-- `manifest.json`: This file defines extension metadata and permissions.
-- `content.js`: This script searches for email addresses in the page's HTML.
-- [Optional] `background.js`: This script can handle collected emails, such as sending them to a server or saving them to local storage.
-
 ## Contributing
 
 Contributions are welcome! If you want to improve this extension, open an issue or submit a pull request. For major changes, please discuss your ideas in an issue before making any modifications.
-
-## License
-
-This extension is open-source and available under the [MIT License](LICENSE).
 
 ## Support
 
