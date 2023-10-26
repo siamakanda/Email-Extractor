@@ -4,6 +4,11 @@
 
 The Email Extractor is a simple tool that allows you to collect email addresses from web pages. It's designed to assist in quickly gathering email addresses from websites for various purposes, such as marketing, outreach, or research.
 
+# UI Screenshots
+<p align="center">
+  <img src="(https://imgur.com/qA26EKC)"/>
+</p>
+
 ## Features
 
 - Collects email addresses from the current webpage.
@@ -27,23 +32,3 @@ The Email Extractor is a simple tool that allows you to collect email addresses 
 ## Contributing
 
 Contributions are welcome! If you want to improve this extension, open an issue or submit a pull request. For major changes, please discuss your ideas in an issue before making any modifications.
-
-## Support
-
-If you encounter any issues or have questions, feel free to open an issue in this repository. We'll do our best to assist you.
-
-## Disclaimer
-
-This extension is intended for legitimate and ethical use cases, respecting the privacy and consent of website visitors. It should not be used for unethical or illegal activities, such as email harvesting without consent or spamming.
-
-Please use this extension responsibly and in compliance with applicable laws and regulations.
-
-## Acknowledgments
-
-- This extension was inspired by the need to quickly collect email addresses for various legitimate purposes.
-
----
-
-**Disclaimer**: This extension is provided as-is and is not guaranteed to work perfectly on all websites due to variations in website structures and email obfuscation techniques.
-
-Enjoy using the Email Extractor Chrome Extension! 😊
