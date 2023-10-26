@@ -4,9 +4,9 @@
 
 The Email Extractor is a simple tool that allows you to collect email addresses from web pages. It's designed to assist in quickly gathering email addresses from websites for various purposes, such as marketing, outreach, or research.
 
-# UI Screenshots
+## UI Screenshots
 <p align="center">
-  <img src="(https://imgur.com/qA26EKC)"/>
+  ![UI-2](https://imgur.com/qA26EKC)
 </p>
 
 ## Features
