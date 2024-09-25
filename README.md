@@ -6,7 +6,7 @@ The Email Extractor is a simple tool that allows you to collect email addresses 
 
 ## UI Screenshots
 <p align="center">
-  ![UI-2](https://imgur.com/qA26EKC)
+  ![UI-2](/Email%20Extractor%20UI.jpeg)
 </p>
 
 ## Features
