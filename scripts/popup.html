@@ -3,27 +3,37 @@
 
 <head>
   <title>Email Extractor</title>
-  <script src="popup.js"></script>
-  <link rel="stylesheet" href="/scripts/style.css">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 
 <body>
 
   <div id="top">
 
-    <img src="/images/icon48.png" alt="" width="16px" height="16px" id="topimg">
+    <img src="/images/icon48.png" alt="" width="24px" height="24px" id="topimg">
     <span id="totalEmails">Total Emails: 0</span>
 
   </div>
-
+  <div class="options-bar">
+    <input type="checkbox" id="visibleOnlyCheckbox" checked>
+    <label for="visibleOnlyCheckbox">Extract from visible text only</label>
+    <input type="text" id="searchBox" placeholder="Search emails..." style="margin-left:16px;flex:1;min-width:120px;">
+    <input type="text" id="domainFilter" placeholder="Filter by domain" style="min-width:120px;">
+    <button class="button-3" id="darkModeToggle" title="Toggle dark mode" style="margin-left:8px;"><i
+        class="fa-solid fa-moon"></i></button>
+  </div>
   <div id="emailList"></div>
 
   <div class="btn">
     <button class="button-3" id="extractButton">Extract</button>
-    <button class="button-3" id="copyButton">Copy All</button>
-    <button class="button-3" id="saveTxtButton">TXT</button>
-    <button class="button-3" id="saveCsvButton">CSV</button>
+    <button class="button-3" id="copyButton">Copy Selected</button>
+    <button class="button-3" id="saveTxtButton">Save as TXT</button>
+    <button class="button-3" id="saveCsvButton">Save as CSV</button>
+    <button class="button-3" id="saveJsonButton">Save as JSON</button>
+    <button class="button-3" id="clearButton">Clear</button>
   </div>
+  <script src="popup.js"></script>
 </body>
 
 </html>

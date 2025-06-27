@@ -1,0 +1,224 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    background: #f7f8fa;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    min-height: 350px;
+    color: #222;
+}
+
+#top {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 20px 12px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+#topimg {
+    margin-right: 10px;
+}
+
+#totalEmails {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #1976d2;
+    text-align: left;
+    margin: 0;
+}
+
+#emailList {
+    background: #fff;
+    margin: 18px 20px 0 20px;
+    padding: 14px 12px;
+    border-radius: 8px;
+    min-height: 120px;
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: 0.98em;
+    box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+    border: 1px solid #e3eaf2;
+    color: #333;
+    white-space: pre-line;
+    margin-top: 10px;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+#emailList:empty {
+    background: #f7f8fa;
+    box-shadow: none;
+}
+
+.btn {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    transition: gap 0.2s;
+    margin: 24px 20px 0 20px;
+}
+
+.button-3 {
+    background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.08);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.button-3:focus:not(:focus-visible):not(.focus-visible) {
+    box-shadow: none;
+    outline: none;
+}
+
+.button-3:hover {
+    background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.13);
+    transform: translateY(-2px) scale(1.04);
+}
+
+.button-3:active {
+    background-color: #4d4d4d;
+    box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
+    transform: scale(0.98);
+}
+
+.button-3:focus {
+    box-shadow: rgba(46, 164, 79, 0.4) 0 0 0 3px;
+    outline: none;
+}
+
+.button-3:disabled {
+    background-color: #94d3a2;
+    border-color: rgba(27, 31, 35, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: default;
+}
+
+.options-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0f4fa;
+    border-radius: 6px;
+    margin: 16px 20px 0 20px;
+    padding: 8px 12px;
+    font-size: 0.97em;
+    color: #1976d2;
+    box-shadow: 0 1px 4px rgba(25, 118, 210, 0.04);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.options-bar:hover {
+    background: #e3eaf2;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+}
+
+.options-bar label {
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.options-bar input[type="checkbox"] {
+    accent-color: #1976d2;
+    margin-right: 4px;
+    transform: scale(1.2);
+    transition: accent-color 0.2s, transform 0.2s;
+}
+
+.options-bar input[type="text"] {
+    border: 1px solid #e3eaf2;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 1em;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.options-bar input[type="text"]:focus {
+    border: 1.5px solid #1976d2;
+    box-shadow: 0 0 4px #1976d2;
+}
+
+#darkModeToggle {
+    font-size: 1.5em;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI', Arial, sans-serif;
+    background: #e3eaf2;
+    color: #222;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s;
+}
+
+#darkModeToggle:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+body.dark-mode {
+    background: #23272f;
+    color: #e3eaf2;
+}
+
+body.dark-mode #top,
+body.dark-mode #emailList {
+    background: #23272f;
+    color: #e3eaf2;
+    border-color: #444b5a;
+}
+
+body.dark-mode .options-bar {
+    background: #2c3140;
+    color: #90caf9;
+}
+
+body.dark-mode .button-3 {
+    background: linear-gradient(90deg, #263859 0%, #1976d2 100%);
+    color: #fff;
+}
+
+body.dark-mode .button-3:hover {
+    background: linear-gradient(90deg, #1565c0 0%, #263859 100%);
+}
+
+@media (max-width: 400px) {
+
+    #top,
+    .btn,
+    #emailList {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .btn {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
