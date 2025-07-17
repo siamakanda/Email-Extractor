@@ -4,85 +4,161 @@
     border: 0;
 }
 
+:root {
+    /* Light mode colors */
+    --bg-light: #f7f8fa;
+    --text-light: #222;
+    --primary-light: #009688;
+    /* A modern, professional teal */
+    --primary-light-hover: #00897b;
+    --primary-light-active: #00796b;
+    --bg-element-light: #fff;
+    --border-light: #e0e0e0;
+    --options-bg-light: #f0f4fa;
+    --options-hover-light: #e3eaf2;
+    --text-options-light: var(--primary-light);
+    --shadow-light: rgba(0, 0, 0, 0.02);
+    --shadow-element-light: rgba(0, 150, 136, 0.04);
+}
+
 body {
-    background: #f7f8fa;
+    background: var(--bg-light);
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    min-width: 320px;
-    min-height: 350px;
+    padding: 0 12px 12px 12px;
+    width: 450px;
+    height: 520px;
+    max-height: 600px;
     color: #222;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 10px;
 }
 
 #top {
     display: flex;
+
     align-items: center;
-    background: #fff;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 16px 20px 12px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    background: var(--bg-element-light);
+    border-bottom: 1px solid var(--border-light);
+    padding: 8px 12px 6px 12px;
+    box-shadow: 0 1px 4px var(--shadow-light);
+    flex-shrink: 0;
+    margin: 0 -12px;
 }
 
 #topimg {
-    margin-right: 10px;
+
+    width: 20px;
+    height: 20px;
 }
 
 #totalEmails {
     font-weight: 600;
-    font-size: 1.1em;
-    color: #1976d2;
+    font-size: 0.98em;
+    color: var(--primary-light);
     text-align: left;
     margin: 0;
 }
 
+#mainContent {
+    position: relative;
+    /* This is the anchor for the absolute spinner */
+    flex: 1 1 auto;
+    /* This makes the container fill the available space */
+    display: flex;
+    /* This helps the child (#emailList) fill the height */
+    min-height: 0;
+    /* Prevents flexbox overflow issues */
+}
+
 #emailList {
-    background: #fff;
-    margin: 18px 20px 0 20px;
-    padding: 14px 12px;
-    border-radius: 8px;
-    min-height: 120px;
-    max-height: 160px;
-    overflow-y: auto;
-    font-size: 0.98em;
-    box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
-    border: 1px solid #e3eaf2;
-    color: #333;
+    background: var(--bg-element-light);
+    margin: 0;
+    padding: 8px 6px;
+    border-radius: 5px;
+    min-height: 40px;
+
+    font-size: 0.93em;
+    box-shadow: 0 1px 2px var(--shadow-element-light);
+    border: 1px solid var(--border-light);
+    color: var(--text-light);
+    /* Slightly darker text for readability */
+
     white-space: pre-line;
-    margin-top: 10px;
     transition: background 0.3s, box-shadow 0.3s;
+    width: 100%;
+    /* Ensure it fills the width of mainContent */
+    overflow-y: auto;
+    /* Make the list itself scrollable, not the container */
 }
 
 #emailList:empty {
-    background: #f7f8fa;
+    background: var(--bg-light);
     box-shadow: none;
 }
 
-.btn {
-    margin-top: 18px;
+.email-item {
     display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    /* Add vertical and horizontal spacing */
+    font-size: 0.95em;
+    /* Slightly larger font size for email text */
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.email-item:hover {
+    background-color: var(--options-hover-light);
+}
+
+.email-checkbox {
+    margin-right: 8px;
+    /* More space between checkbox and label */
+    flex-shrink: 0;
+}
+
+.email-item label {
+    cursor: pointer;
+}
+
+.btn {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px;
+    gap: 6px;
     transition: gap 0.2s;
-    margin: 24px 20px 0 20px;
+    flex-shrink: 0;
+    /* Prevent the button container from shrinking */
+    margin: 0;
 }
 
 .button-3 {
-    background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+    background: linear-gradient(90deg, var(--primary-light) 0%, #4db6ac 100%);
     color: #fff;
     border: none;
-    border-radius: 6px;
-    padding: 10px 18px;
-    font-size: 1em;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 0.95em;
     font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(25, 118, 210, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 150, 136, 0.1);
     transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
     display: inline-block;
     position: relative;
     text-align: center;
     touch-action: manipulation;
     vertical-align: middle;
-    white-space: nowrap;
+    /* white-space: nowrap; removed to allow text to wrap */
+    flex: 1 1 70px;
+    min-width: 70px;
+    max-width: 100%;
+    min-height: 28px;
+    /* Use min-height to allow buttons to grow vertically */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .button-3:focus:not(:focus-visible):not(.focus-visible) {
@@ -91,41 +167,51 @@ body {
 }
 
 .button-3:hover {
-    background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%);
-    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.13);
-    transform: translateY(-2px) scale(1.04);
+    background: linear-gradient(90deg, var(--primary-light-hover) 0%, #26a69a 100%);
+    box-shadow: 0 2px 6px rgba(0, 150, 136, 0.15);
+    transform: translateY(-1px) scale(1.02);
 }
 
 .button-3:active {
-    background-color: #4d4d4d;
-    box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
+    background-color: var(--primary-light-active);
+    /* Slightly different active state */
+    box-shadow: rgba(20, 70, 32, 0.15) 0 1px 0 inset;
     transform: scale(0.98);
 }
 
 .button-3:focus {
-    box-shadow: rgba(46, 164, 79, 0.4) 0 0 0 3px;
+    box-shadow: rgba(0, 150, 136, 0.4) 0 0 0 2px;
     outline: none;
 }
 
 .button-3:disabled {
     background-color: #94d3a2;
+    /* Disabled could be more visually distinct */
     border-color: rgba(27, 31, 35, 0.1);
     color: rgba(255, 255, 255, 0.8);
+
     cursor: default;
 }
 
 .options-bar {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #f0f4fa;
-    border-radius: 6px;
-    margin: 16px 20px 0 20px;
-    padding: 8px 12px;
-    font-size: 0.97em;
-    color: #1976d2;
-    box-shadow: 0 1px 4px rgba(25, 118, 210, 0.04);
+    align-items: flex-start;
+    /* Align to top to handle wrapped content gracefully */
+    justify-content: space-between;
+
+    gap: 4px;
+    background: var(--options-bg-light);
+    border-radius: 4px;
+    margin: 0;
+    padding: 4px 6px;
+    font-size: 0.93em;
+    color: var(--text-options-light);
+    box-shadow: 0 1px 2px rgba(25, 118, 210, 0.03);
+    /* Shadow remains consistent */
     transition: background 0.3s, box-shadow 0.3s;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+
 }
 
 .options-bar:hover {
@@ -134,91 +220,198 @@ body {
 }
 
 .options-bar label {
+
     cursor: pointer;
     user-select: none;
     transition: color 0.2s;
+    font-size: 0.93em;
 }
 
+
 .options-bar input[type="checkbox"] {
-    accent-color: #1976d2;
-    margin-right: 4px;
-    transform: scale(1.2);
+    accent-color: var(--primary-light);
+    margin-right: 2px;
+    transform: scale(1.1);
     transition: accent-color 0.2s, transform 0.2s;
 }
 
 .options-bar input[type="text"] {
-    border: 1px solid #e3eaf2;
-    border-radius: 4px;
-    padding: 6px 8px;
-    font-size: 1em;
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 0.95em;
     outline: none;
     transition: border 0.2s, box-shadow 0.2s;
+    flex: 1 1 80px;
+    min-width: 0;
+    height: 26px;
 }
 
+
 .options-bar input[type="text"]:focus {
-    border: 1.5px solid #1976d2;
-    box-shadow: 0 0 4px #1976d2;
+    border: 1.2px solid var(--primary-light);
+    box-shadow: 0 0 2px var(--primary-light);
+
 }
 
 #darkModeToggle {
-    font-size: 1.5em;
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.2em;
     background: #e3eaf2;
     color: #222;
     border: none;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
     transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+    cursor: pointer;
 }
 
 #darkModeToggle:hover {
-    background: #1976d2;
+    background: var(--primary-light);
     color: #fff;
 }
 
 body.dark-mode {
-    background: #23272f;
-    color: #e3eaf2;
+    /* Dark mode colors */
+    --bg-light: #23272f;
+    --text-light: #e3eaf2;
+    --primary-light: #4dd0e1;
+    /* A vibrant cyan for dark mode */
+    --primary-light-hover: #80deea;
+    --primary-light-active: #26c6da;
+    --bg-element-light: #23272f;
+    --border-light: #444b5a;
+    --options-bg-light: #2c3140;
+    --options-hover-light: #37474f;
+    --text-options-light: var(--primary-light);
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-element-light: rgba(77, 208, 225, 0.1);
 }
 
-body.dark-mode #top,
+body.dark-mode {
+    background: var(--bg-light);
+    color: var(--text-light);
+}
+
+body.dark-mode #top {
+    background: var(--bg-element-light);
+    color: var(--text-light);
+    border-color: var(--border-light);
+}
+
 body.dark-mode #emailList {
-    background: #23272f;
-    color: #e3eaf2;
-    border-color: #444b5a;
+    background: var(--bg-element-light);
+    color: var(--text-light);
+    border-color: var(--border-light);
 }
 
 body.dark-mode .options-bar {
-    background: #2c3140;
-    color: #90caf9;
+    background: var(--options-bg-light);
+    color: var(--text-options-light);
 }
 
 body.dark-mode .button-3 {
-    background: linear-gradient(90deg, #263859 0%, #1976d2 100%);
+    background: linear-gradient(90deg, var(--primary-light-active) 0%, var(--primary-light) 100%);
     color: #fff;
+    /* Keep text white for contrast */
 }
 
 body.dark-mode .button-3:hover {
-    background: linear-gradient(90deg, #1565c0 0%, #263859 100%);
+    background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary-light-hover) 100%);
 }
 
-@media (max-width: 400px) {
+#selectAllContainer {
+    margin: 0 10px 4px 10px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: space-between;
 
-    #top,
-    .btn,
-    #emailList {
-        margin-left: 8px;
-        margin-right: 8px;
-    }
+}
 
-    .btn {
-        flex-direction: column;
-        gap: 8px;
-    }
+#selectAllContainer label {
+    color: var(--text-options-light);
+    font-size: 0.93em;
+}
+
+body.dark-mode #selectAllContainer label {
+    color: var(--text-options-light);
+}
+
+.toast-notification {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    background: #323232;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.93em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.13);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.3s, bottom 0.3s;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    bottom: 28px;
+    pointer-events: auto;
+}
+
+#loadingSpinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: var(--primary-light);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    /* Match the emailList's border-radius */
+    z-index: 10;
+}
+
+.hidden {
+    display: none !important;
+}
+
+body.dark-mode .toast-notification {
+    background: #222b3a;
+    color: #e3eaf2;
+}
+
+body.dark-mode #loadingSpinner {
+    background-color: rgba(35, 39, 47, 0.7);
+}
+
+
+.tile_left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Allow filter controls to wrap to a new line */
+    gap: 6px;
+    /* Add spacing between wrapped items */
+    flex: 1;
+    /* Allow this container to grow and fill available space */
+}
+
+.tile_right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    /* Add spacing and let it align naturally */
 }

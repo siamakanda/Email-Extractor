@@ -11,19 +11,36 @@
 
   <div id="top">
 
-    <img src="/images/icon48.png" alt="" width="24px" height="24px" id="topimg">
-    <span id="totalEmails">Total Emails: 0</span>
+    <div class="tile_left">
+      <img src="/images/icon48.png" alt="" width="24px" height="24px" id="topimg">
+      <span id="totalEmails">Total Emails: 0</span>
+    </div>
+
+    <div class="tile_right">
+      <button id="darkModeToggle" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+    </div>
 
   </div>
   <div class="options-bar">
-    <input type="checkbox" id="visibleOnlyCheckbox" checked>
-    <label for="visibleOnlyCheckbox">Extract from visible text only</label>
-    <input type="text" id="searchBox" placeholder="Search emails..." style="margin-left:16px;flex:1;min-width:120px;">
-    <input type="text" id="domainFilter" placeholder="Filter by domain" style="min-width:120px;">
-    <button class="button-3" id="darkModeToggle" title="Toggle dark mode" style="margin-left:8px;"><i
-        class="fa-solid fa-moon"></i></button>
+    <input type="text" id="searchBox" placeholder="Search emails...">
+    <input type="text" id="domainFilter" placeholder="Filter by domain">
   </div>
-  <div id="emailList"></div>
+  <!-- <div id="selectAllContainer"> -->
+  <div class="options-bar">
+    <div class="tile_left">
+      <input type="checkbox" id="visibleOnlyCheckbox" checked>
+      <label for="visibleOnlyCheckbox">Extract from visible text only</label>
+    </div>
+    <div class="tile_right">
+      <input type="checkbox" id="selectAllCheckbox">
+      <label for="selectAllCheckbox">Select All</label>
+    </div>
+  </div>
+  <div id="mainContent">
+    <div id="emailList"></div>
+    <div id="loadingSpinner" class="hidden"><i class="fa-solid fa-spinner fa-spin"></i></div>
+  </div>
+  <div id="toastContainer"></div>
 
   <div class="btn">
     <button class="button-3" id="extractButton">Extract</button>
