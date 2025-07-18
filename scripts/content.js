@@ -4,7 +4,7 @@ const EMAIL_REGEX = /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[\p{L}]{2,}/gu;
 /**
  * List of patterns or domains to ignore (false positives, common non-user emails)
  */
-const EMAIL_BLACKLIST = [
+const DEFAULT_EMAIL_BLACKLIST = [
   /^noreply@/i, /@example\.com$/i, /@test\.com$/i, /@localhost$/i
 ];
 /**
@@ -33,8 +33,8 @@ function isNodeVisible(node) {
  * @param {string} email
  * @returns {boolean}
  */
-function isBlacklisted(email) {
-  return EMAIL_BLACKLIST.some(pattern => pattern.test(email));
+function isBlacklisted(email, blacklist) {
+  return blacklist.some(pattern => pattern.test(email));
 }
 
 /**
@@ -43,7 +43,10 @@ function isBlacklisted(email) {
  * @param {RegExp} [customRegex] - Optional custom regex for extraction.
  * @returns {string[]} Array of unique emails (lowercased).
  */
-function extractEmailsFromPage(visibleOnly = true, customRegex) {
+function extractEmailsFromPage(visibleOnly = true, customRegex, blacklist = []) {
+  if (!document.body) {
+    return [];
+  }
   const emails = [];
   const regex = customRegex || EMAIL_REGEX;
   if (visibleOnly) {
@@ -54,42 +57,68 @@ function extractEmailsFromPage(visibleOnly = true, customRegex) {
     });
     let node;
     while ((node = walker.nextNode())) {
-      let matches;
       const text = node.textContent;
-      while ((matches = regex.exec(text)) !== null) {
-        emails.push(matches[0].toLowerCase());
+      // Use matchAll to correctly handle the global regex across multiple text nodes without state issues.
+      for (const match of text.matchAll(regex)) {
+        emails.push(match[0].toLowerCase());
       }
     }
   } else {
-    // More efficient: get all elements and filter for text content
-    const allElements = document.querySelectorAll('*'); 
-    for (const element of allElements) {
-      if (element.children.length === 0) { // Only process elements with no children (text nodes)
-        const text = element.textContent;
-        let matches;
-        while ((matches = regex.exec(text)) !== null) {
-          emails.push(matches[0].toLowerCase());
-        }
-      }
+    // Scan all rendered text content of the body, which is more efficient.
+    const body = document.body;
+    if (!body) return [];
+    const text = body.innerText;
+    // Use matchAll to correctly handle the global regex.
+    for (const match of text.matchAll(regex)) {
+      emails.push(match[0].toLowerCase());
     }
   }
     // Remove blacklisted and deduplicate
-  return Array.from(new Set(emails.filter(e => !isBlacklisted(e))));
+  return Array.from(new Set(emails.filter(e => !isBlacklisted(e, blacklist))));
 }
 
 // The script is designed to be injected programmatically.
-(function() {
-  // The 'visibleOnly' argument will be passed from popup.js
+// The last statement of an injected script is its return value.
+// We use an async IIFE (Immediately Invoked Function Expression) which returns a promise.
+// The scripting API will wait for this promise to resolve, and its resolved value will be the result of the script.
+(async () => {
   try {
-    const extracted = extractEmailsFromPage(arguments[0] !== false);
-    // Always return an object with either emails or an error
+    // A crucial guard for pages that might not have a body yet (e.g., framesets, XML files).
+    // This prevents the script from crashing on non-standard pages.
+    if (!document.body) {
+      return { emails: [] };
+    }
+
+    let settings = {};
+    // Defensively check for the storage API. On some pages (e.g., with strict CSP) or
+    // in some contexts, the chrome.storage API might not be available.
+    if (chrome && chrome.storage && chrome.storage.local) {
+      try {
+        settings = await chrome.storage.local.get(['customBlacklist', 'visibleOnly']);
+      } catch (e) {
+        console.warn('Email Extractor: Could not access chrome.storage.local. Using default settings.', e);
+      }
+    }
+
+    // Default to true if the setting is not found or is not a boolean.
+    const visibleOnly = typeof settings.visibleOnly === 'boolean' ? settings.visibleOnly : true;
+
+    let combinedBlacklist = [...DEFAULT_EMAIL_BLACKLIST];
+
+    if (settings.customBlacklist && Array.isArray(settings.customBlacklist)) {
+      const customPatterns = settings.customBlacklist.map(pattern => {
+        try {
+          return new RegExp(pattern, 'i');
+        } catch (e) {
+          console.warn(`Invalid regex in custom blacklist: ${pattern}`);
+          return null;
+        }
+      }).filter(Boolean);
+      combinedBlacklist = combinedBlacklist.concat(customPatterns);
+    }
+    const extracted = extractEmailsFromPage(visibleOnly, null, combinedBlacklist);
     return { emails: extracted && extracted.length > 0 ? extracted : [] };
   } catch (error) {
-    // Return a structured error object
-    return {
-      __isError: true,
-      message: error.message || "Unknown error during extraction",
-      stack: error.stack,
-    };
+    return { __isError: true, message: error.message, stack: error.stack };
   }
-}());
+})();

@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastContainer = document.getElementById('toastContainer');
   const darkModeToggle = document.getElementById('darkModeToggle');
   const selectionCount = document.getElementById('selectionCount');
+  const clearFiltersButton = document.getElementById('clearFiltersButton');
+  const optionsButton = document.getElementById('optionsButton');
 
   let allEmails = [];
 
@@ -42,77 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const visibleOnly = visibleOnlyCheckbox.checked;
-
-        const results = await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            args: [visibleOnly],
-            func: (visibleOnly) => {
-                // This entire function is executed in the context of the web page.
-                // All helper functions are now defined within this scope.
-
-                const EMAIL_REGEX = /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[\p{L}]{2,}/gu;
-                const EMAIL_BLACKLIST = [/^noreply@/i, /@example\.com$/i, /@test\.com$/i, /@localhost$/i];
-
-                function isNodeVisible(node) {
-                    if (!node.parentElement) return false;
-                    let el = node.parentElement;
-                    while (el) {
-                        const style = window.getComputedStyle(el);
-                        if (
-                            style.display === 'none' ||
-                            style.visibility === 'hidden' ||
-                            el.hasAttribute('hidden') ||
-                            el.getAttribute('aria-hidden') === 'true'
-                        ) return false;
-                        el = el.parentElement;
-                    }
-                    return !node.parentElement.tagName.match(/^(SCRIPT|STYLE|NOSCRIPT|HEAD|TITLE)$/i);
-                }
-
-                function isBlacklisted(email) {
-                    return EMAIL_BLACKLIST.some(pattern => pattern.test(email));
-                }
-
-                function extractEmailsFromPage(visibleOnly = true) {
-                    const emails = [];
-                    const regex = EMAIL_REGEX;
-                    const body = document.body;
-                    if (!body) return []; // Safety check
-
-                    if (visibleOnly) {
-                        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, {
-                            acceptNode(node) {
-                                return isNodeVisible(node) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-                            }
-                        });
-                        let node;
-                        while ((node = walker.nextNode())) {
-                            const text = node.textContent;
-                            let matches;
-                            while ((matches = regex.exec(text)) !== null) {
-                                emails.push(matches[0].toLowerCase());
-                            }
-                        }
-                    } else {
-                        // Scan all rendered text content of the body, which is more efficient.
-                        const text = body.innerText;
-                        let matches;
-                        while ((matches = regex.exec(text)) !== null) {
-                            emails.push(matches[0].toLowerCase());
-                        }
-                    }
-                    return Array.from(new Set(emails.filter(e => !isBlacklisted(e))));
-                }
-
-                try {
-                    const extracted = extractEmailsFromPage(visibleOnly);
-                    return { emails: extracted && extracted.length > 0 ? extracted : [] };
-                } catch (error) {
-                    return { __isError: true, message: error.message, stack: error.stack };
-                }
-            }
-        });
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['scripts/content.js'],
+      });
 
       if (!results || !results[0] || !results[0].result) {
         throw new Error('Failed to get a response from the content script.');
@@ -139,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const debugInfo = {
             url: tab ? tab.url : 'N/A',
             version: chrome.runtime.getManifest().version,
-        message: error.message,
-        stack: error.stack,
+            message: error.message,
+            stack: error.stack,
       };
       showToast('An error occurred.', 'error', debugInfo);
       allEmails = [];
@@ -157,14 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderEmails = (emails) => {
     emailListDiv.innerHTML = '';
     if (emails.length === 0) {
-      emailListDiv.innerHTML = '<div class="no-emails">No emails to display.</div>';
+      const searchTerm = searchBox.value.trim();
+      const domainTerm = domainFilter.value.trim();
+      if (searchTerm || domainTerm) {
+        emailListDiv.innerHTML = '<div class="no-emails">No emails match your filter.</div>';
+      } else {
+        emailListDiv.innerHTML = '<div class="no-emails">No emails to display.</div>';
+      }
     } else {
       emails.forEach((email, index) => {
         const emailItem = document.createElement('div');
         emailItem.className = 'email-item';
         emailItem.innerHTML = `
           <input type="checkbox" id="email-${index}" value="${email}" class="email-checkbox">
-          <label for="email-${index}">${email}</label>
+          <label for="email-${index}" class="email-label">${email}</label>
+          <button class="copy-email-btn" title="Copy email"><i class="fa-regular fa-copy"></i></button>
         `;
         emailListDiv.appendChild(emailItem);
       });
@@ -178,12 +120,20 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   const applyFilters = () => {
     const searchTerm = searchBox.value.toLowerCase();
-    const domainTerm = domainFilter.value.toLowerCase();
+    const domainTerms = domainFilter.value.toLowerCase().split(',').map(d => d.trim()).filter(d => d);
 
     const filteredEmails = allEmails.filter(email => {
       const emailLower = email.toLowerCase();
       const matchesSearch = emailLower.includes(searchTerm);      
-      const matchesDomain = domainTerm ? emailLower.endsWith(`@${domainTerm}`) || emailLower.split('@')[1].includes(domainTerm) : true;
+
+      // If no domain filters, it's a match.
+      if (domainTerms.length === 0) return matchesSearch;
+
+      const emailDomain = emailLower.split('@')[1];
+      if (!emailDomain) return false; // Should not happen for valid emails
+
+      // Check if the email's domain matches any of the filter terms.
+      const matchesDomain = domainTerms.some(term => emailDomain.includes(term));
       return matchesSearch && matchesDomain;
     });
 
@@ -284,6 +234,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   extractButton.addEventListener('click', extractEmailsFromTab);
 
+  optionsButton.addEventListener('click', () => {
+    chrome.runtime.openOptionsPage();
+  });
+
+  clearFiltersButton.addEventListener('click', () => {
+    searchBox.value = '';
+    domainFilter.value = '';
+    applyFilters();
+    showToast('Filters cleared.');
+  });
+
   clearButton.addEventListener('click', () => {
     allEmails = [];
     renderEmails([]);
@@ -363,8 +324,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  searchBox.addEventListener('input', applyFilters);
-  domainFilter.addEventListener('input', applyFilters);
+  emailListDiv.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.copy-email-btn');
+    if (copyBtn) {
+      const emailItem = copyBtn.closest('.email-item');
+      const email = emailItem.querySelector('.email-checkbox').value;
+      navigator.clipboard.writeText(email).then(() => {
+        showToast(`Copied: ${email}`, 'success');
+      }).catch(err => {
+        showToast('Failed to copy email.', 'error');
+      });
+    }
+  });
+
+  searchBox.addEventListener('input', () => {
+    applyFilters();
+    chrome.storage.local.set({ searchTerm: searchBox.value });
+  });
+
+  domainFilter.addEventListener('input', () => {
+    applyFilters();
+    chrome.storage.local.set({ domainTerm: domainFilter.value });
+  });
+
+  visibleOnlyCheckbox.addEventListener('change', () =>
+    chrome.storage.local.set({ visibleOnly: visibleOnlyCheckbox.checked }));
 
   darkModeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
@@ -376,18 +360,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Initialization ---
 
-  // Load dark mode preference on startup
-  chrome.storage.local.get('darkMode', (data) => {
+  /**
+   * Loads saved settings from storage and initializes the popup state.
+   */
+  const initializePopup = async () => {
     try {
-      if (data && data.darkMode) {
+      // Defensively check for the storage API.
+      if (!chrome || !chrome.storage || !chrome.storage.local) {
+        // This specific error helps diagnose if the API itself is missing.
+        throw new Error("chrome.storage.local API is not available");
+      }
+
+      // Use the promise-based version of the API for cleaner async/await.
+      const settings = await chrome.storage.local.get(['darkMode', 'visibleOnly', 'searchTerm', 'domainTerm']);
+
+      if (settings.darkMode) {
         document.body.classList.add('dark-mode');
         darkModeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
       }
+
+      if (typeof settings.visibleOnly === 'boolean') {
+        visibleOnlyCheckbox.checked = settings.visibleOnly;
+      }
+
+      searchBox.value = settings.searchTerm || '';
+      domainFilter.value = settings.domainTerm || '';
+
     } catch (error) {
-      console.error("Error accessing storage:", error);
-      // Handle the error as appropriate for your application, e.g., use a default theme
-    }    
-  });
-  // Automatically run extraction when the popup is opened.
-  extractEmailsFromTab();
+      // If storage API is not available or fails, log a warning and proceed with default UI settings.
+      console.warn(`Could not load settings: ${error.message}. Using defaults.`);
+    } finally {
+      // Always run the extraction after attempting to load settings.
+      extractEmailsFromTab();
+    }
+  };
+
+  initializePopup();
 });

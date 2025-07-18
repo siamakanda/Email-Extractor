@@ -17,6 +17,7 @@
     </div>
 
     <div class="tile_right">
+      <button id="optionsButton" title="Open settings"><i class="fa-solid fa-gear"></i></button>
       <button id="darkModeToggle" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
     </div>
 
@@ -25,7 +26,6 @@
     <input type="text" id="searchBox" placeholder="Search emails...">
     <input type="text" id="domainFilter" placeholder="Filter by domain">
   </div>
-  <!-- <div id="selectAllContainer"> -->
   <div class="options-bar">
     <div class="tile_left">
       <input type="checkbox" id="visibleOnlyCheckbox" checked>
@@ -50,6 +50,7 @@
     <button class="button-3" id="saveCsvButton" disabled>Save as CSV</button>
     <button class="button-3" id="saveJsonButton" disabled>Save as JSON</button>
     <button class="button-3" id="clearButton">Clear</button>
+    <button class="button-3" id="clearFiltersButton" title="Clear search and domain filters">Clear Filters</button>
   </div>
   <script src="popup.js"></script>
 </body>

@@ -4,6 +4,16 @@
     border: 0;
 }
 
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
 :root {
     /* Light mode colors */
     --bg-light: #f7f8fa;
@@ -116,6 +126,7 @@ body {
     padding: 4px 8px;
     /* Add vertical and horizontal spacing */
     font-size: 0.95em;
+    gap: 6px;
     /* Slightly larger font size for email text */
     border-radius: 3px;
     transition: background-color 0.2s;
@@ -133,6 +144,34 @@ body {
 
 .email-item label {
     cursor: pointer;
+}
+
+.email-label {
+    flex-grow: 1;
+    word-break: break-all;
+    min-width: 0;
+}
+
+.copy-email-btn {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: opacity 0.2s, background-color 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.copy-email-btn:hover {
+    opacity: 1;
+    background-color: var(--options-hover-light);
+}
+
+.copy-email-btn i {
+    pointer-events: none;
 }
 
 /* Button Styles */
@@ -277,7 +316,8 @@ body {
 
 }
 
-#darkModeToggle {
+#darkModeToggle,
+#optionsButton {
     font-size: 1.2em;
     background: #e3eaf2;
     color: #222;
@@ -295,7 +335,8 @@ body {
     cursor: pointer;
 }
 
-#darkModeToggle:hover {
+#darkModeToggle:hover,
+#optionsButton:hover {
     background: var(--primary-light);
     color: #fff;
 }
