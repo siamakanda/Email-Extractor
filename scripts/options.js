@@ -3,21 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const blacklistTextarea = document.getElementById('blacklist');
   const toastContainer = document.getElementById('toastContainer');
 
-  // Simple toast function for feedback
-  const showToast = (message, type = 'info') => {
-    const toast = document.createElement('div');
-    toast.className = `toast-notification ${type}`;
-    toast.textContent = message;
-    toastContainer.appendChild(toast);
-    setTimeout(() => {
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
-    }, 100);
-  };
-
   // Load saved settings
   const loadSettings = () => {
     chrome.storage.local.get(['customBlacklist'], (result) => {

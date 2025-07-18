@@ -187,41 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     extractButton.disabled = isLoading;
   };
 
-  const showToast = (message, type = 'info', debugInfo = null) => {
-    const toast = document.createElement('div');
-    toast.className = `toast-notification ${type}`; // Corrected class name
-
-    const messageSpan = document.createElement('span');
-    messageSpan.textContent = message;
-    toast.appendChild(messageSpan);
-
-    if (type === 'error' && debugInfo) {
-      const debugButton = document.createElement('button');
-      debugButton.className = 'toast-debug-button';
-      debugButton.textContent = 'Copy Debug Info';
-      debugButton.onclick = (e) => {
-        e.stopPropagation(); // Prevent the toast from hiding on click
-        const formattedDebugInfo = `--- Email Extractor Debug Info ---\nVersion: ${debugInfo.version}\nURL: ${debugInfo.url}\nTimestamp: ${new Date().toISOString()}\nUser Agent: ${navigator.userAgent}\n\nError: ${debugInfo.message}\n\nStack:\n${debugInfo.stack}\n---------------------------------`;
-        navigator.clipboard.writeText(formattedDebugInfo)
-          .then(() => showToast('Debug info copied!', 'success'))
-          .catch(err => showToast('Failed to copy debug info.', 'error'));
-      };
-      toast.appendChild(debugButton);
-    }
-
-    toastContainer.appendChild(toast);
-
-    // Animate in
-    setTimeout(() => {
-      toast.classList.add('show');
-      // Set timeout to animate out and remove
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 500); // Remove from DOM after transition
-      }, 4000); // Keep on screen for 4 seconds
-    }, 100);
-  };
-
   const downloadFile = (content, filename, contentType) => {
     const blob = new Blob([content], { type: contentType });
     chrome.downloads.download({
