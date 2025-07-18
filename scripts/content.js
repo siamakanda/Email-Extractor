@@ -44,7 +44,7 @@ function isBlacklisted(email) {
  * @returns {string[]} Array of unique emails (lowercased).
  */
 function extractEmailsFromPage(visibleOnly = true, customRegex) {
-   const emails = [];
+  const emails = [];
   const regex = customRegex || EMAIL_REGEX;
   if (visibleOnly) {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
@@ -61,29 +61,35 @@ function extractEmailsFromPage(visibleOnly = true, customRegex) {
       }
     }
   } else {
-      try {
-          const textNodes = document.evaluate('//text()[normalize-space(.) != ""]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-          for (let i = 0; i < textNodes.snapshotLength; i++) {
-              const textNode = textNodes.snapshotItem(i);
-              let matches;
-              const text = textNode.textContent;
-              while ((matches = regex.exec(text)) !== null) {
-                  emails.push(matches[0].toLowerCase());
-              }
-          }
-      } catch (error) {
-          console.error("Error in XPath evaluation:", error);
-          return [];  // Or handle the error as appropriate for your application.
+    // More efficient: get all elements and filter for text content
+    const allElements = document.querySelectorAll('*'); 
+    for (const element of allElements) {
+      if (element.children.length === 0) { // Only process elements with no children (text nodes)
+        const text = element.textContent;
+        let matches;
+        while ((matches = regex.exec(text)) !== null) {
+          emails.push(matches[0].toLowerCase());
+        }
       }
+    }
   }
-   // Remove blacklisted and deduplicate
+    // Remove blacklisted and deduplicate
   return Array.from(new Set(emails.filter(e => !isBlacklisted(e))));
 }
 
-// This script is designed to be injected programmatically.
-// It immediately executes and returns the result.
+// The script is designed to be injected programmatically.
 (function() {
   // The 'visibleOnly' argument will be passed from popup.js
-    // We default to true if no argument is passed.
-  return extractEmailsFromPage(arguments[0] !== false);
-})();
+  try {
+    const extracted = extractEmailsFromPage(arguments[0] !== false);
+    // Always return an object with either emails or an error
+    return { emails: extracted && extracted.length > 0 ? extracted : [] };
+  } catch (error) {
+    // Return a structured error object
+    return {
+      __isError: true,
+      message: error.message || "Unknown error during extraction",
+      stack: error.stack,
+    };
+  }
+}());

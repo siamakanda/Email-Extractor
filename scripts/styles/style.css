@@ -62,9 +62,11 @@ body {
     margin: 0;
 }
 
+/* Main Content & Email List Styles */
+
 #mainContent {
     position: relative;
-    /* This is the anchor for the absolute spinner */
+    /* Anchor for loading spinner */
     flex: 1 1 auto;
     /* This makes the container fill the available space */
     display: flex;
@@ -99,6 +101,15 @@ body {
     box-shadow: none;
 }
 
+.no-emails {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+    opacity: 0.7;
+}
+
+/* Email Item Styles */
+
 .email-item {
     display: flex;
     align-items: center;
@@ -123,6 +134,8 @@ body {
 .email-item label {
     cursor: pointer;
 }
+
+/* Button Styles */
 
 .btn {
     display: flex;
@@ -185,12 +198,22 @@ body {
 }
 
 .button-3:disabled {
-    background-color: #94d3a2;
-    /* Disabled could be more visually distinct */
-    border-color: rgba(27, 31, 35, 0.1);
-    color: rgba(255, 255, 255, 0.8);
-
+    background-image: none;
+    background-color: #d1d5db;
+    /* A neutral gray */
+    color: #9ca3af;
     cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
+.button-3:disabled:hover {
+    transform: none;
+}
+
+.options-bar label:hover {
+    color: #00796b;
+    /* Darker teal for hover */
 }
 
 .options-bar {
@@ -326,13 +349,22 @@ body.dark-mode .button-3:hover {
     background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary-light-hover) 100%);
 }
 
+body.dark-mode .button-3:disabled {
+    background-color: #374151;
+    color: #6b7280;
+}
+
+body.dark-mode .options-bar label:hover {
+    color: #80deea;
+    /* Lighter cyan for hover */
+}
+
 #selectAllContainer {
     margin: 0 10px 4px 10px;
     display: flex;
     align-items: center;
     flex-shrink: 0;
     justify-content: space-between;
-
 }
 
 #selectAllContainer label {
@@ -340,8 +372,10 @@ body.dark-mode .button-3:hover {
     font-size: 0.93em;
 }
 
+
 body.dark-mode #selectAllContainer label {
     color: var(--text-options-light);
+
 }
 
 .toast-notification {
@@ -359,6 +393,12 @@ body.dark-mode #selectAllContainer label {
     pointer-events: none;
     z-index: 9999;
     transition: opacity 0.3s, bottom 0.3s;
+
+    /* Flex properties for aligning message and debug button */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
 }
 
 .toast-notification.show {
@@ -367,6 +407,50 @@ body.dark-mode #selectAllContainer label {
     pointer-events: auto;
 }
 
+.toast-notification.success {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.toast-notification.error {
+    background-color: #c62828;
+    color: white;
+}
+
+body.dark-mode .toast-notification.success {
+    background-color: #66bb6a;
+    color: #121212;
+}
+
+body.dark-mode .toast-notification.error {
+    background-color: #ef9a9a;
+    color: #121212;
+}
+
+.toast-debug-button {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.8em;
+    cursor: pointer;
+    flex-shrink: 0;
+    /* Prevent button from shrinking */
+    transition: background-color 0.2s;
+}
+
+.toast-debug-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .toast-notification.error .toast-debug-button {
+    color: #121212;
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Loading Spinner Styles */
 #loadingSpinner {
     position: absolute;
     top: 0;
@@ -383,6 +467,7 @@ body.dark-mode #selectAllContainer label {
     /* Match the emailList's border-radius */
     z-index: 10;
 }
+
 
 .hidden {
     display: none !important;

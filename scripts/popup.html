@@ -33,7 +33,7 @@
     </div>
     <div class="tile_right">
       <input type="checkbox" id="selectAllCheckbox">
-      <label for="selectAllCheckbox">Select All</label>
+      <label for="selectAllCheckbox">Select All</label><span id="selectionCount"></span>
     </div>
   </div>
   <div id="mainContent">
@@ -43,11 +43,12 @@
   <div id="toastContainer"></div>
 
   <div class="btn">
-    <button class="button-3" id="extractButton">Extract</button>
-    <button class="button-3" id="copyButton">Copy Selected</button>
-    <button class="button-3" id="saveTxtButton">Save as TXT</button>
-    <button class="button-3" id="saveCsvButton">Save as CSV</button>
-    <button class="button-3" id="saveJsonButton">Save as JSON</button>
+    <button class="button-3" id="extractButton" title="Re-scan the page for emails">Refresh</button>
+    <button class="button-3" id="copyButton" disabled>Copy Selected</button>
+    <button class="button-3" id="copyAllButton">Copy All</button>
+    <button class="button-3" id="saveTxtButton" disabled>Save as TXT</button>
+    <button class="button-3" id="saveCsvButton" disabled>Save as CSV</button>
+    <button class="button-3" id="saveJsonButton" disabled>Save as JSON</button>
     <button class="button-3" id="clearButton">Clear</button>
   </div>
   <script src="popup.js"></script>
