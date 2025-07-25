@@ -68,6 +68,11 @@ function extractEmailsFromPage(visibleOnly = true, customRegex, blacklist = []) 
     const body = document.body;
     if (!body) return [];
     const text = body.innerText;
+    // Performance safeguard: limit text length
+    const MAX_TEXT_LENGTH = 2_000_000; // 2 million chars (~2MB)
+    if (text.length > MAX_TEXT_LENGTH) {
+      throw new Error('Page is too large to process efficiently. Try extracting from visible text only.');
+    }
     // Use matchAll to correctly handle the global regex.
     for (const match of text.matchAll(regex)) {
       emails.push(match[0].toLowerCase());

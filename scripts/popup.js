@@ -103,11 +103,27 @@ document.addEventListener('DOMContentLoaded', () => {
       emails.forEach((email, index) => {
         const emailItem = document.createElement('div');
         emailItem.className = 'email-item';
-        emailItem.innerHTML = `
-          <input type="checkbox" id="email-${index}" value="${email}" class="email-checkbox">
-          <label for="email-${index}" class="email-label">${email}</label>
-          <button class="copy-email-btn" title="Copy email"><i class="fa-regular fa-copy"></i></button>
-        `;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `email-${index}`;
+        checkbox.value = email;
+        checkbox.className = 'email-checkbox';
+
+        const label = document.createElement('label');
+        label.htmlFor = `email-${index}`;
+        label.className = 'email-label';
+        label.textContent = email;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-email-btn';
+        copyBtn.title = 'Copy email';
+        copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+        emailItem.appendChild(checkbox);
+        emailItem.appendChild(label);
+        emailItem.appendChild(copyBtn);
+
         emailListDiv.appendChild(emailItem);
       });
     }

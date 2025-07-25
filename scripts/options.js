@@ -16,6 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Save settings
   const saveSettings = () => {
     const blacklist = blacklistTextarea.value.split('\n').map(line => line.trim()).filter(line => line);
+    // Validate regex patterns
+    const invalidPatterns = [];
+    blacklist.forEach(pattern => {
+      try {
+        new RegExp(pattern, 'i');
+      } catch (e) {
+        invalidPatterns.push(pattern);
+      }
+    });
+    if (invalidPatterns.length > 0) {
+      showToast('Invalid regex pattern(s): ' + invalidPatterns.join(', '), 'error');
+      return;
+    }
     chrome.storage.local.set({ customBlacklist: blacklist }, () => {
       if (chrome.runtime.lastError) return showToast('Error saving settings.', 'error');
       showToast('Settings saved successfully!', 'success');
